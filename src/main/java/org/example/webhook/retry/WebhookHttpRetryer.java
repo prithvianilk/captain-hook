@@ -5,9 +5,8 @@ import org.example.webhook.event.RetryConfig;
 import org.example.webhook.http.WebhookHttpClient;
 
 import java.net.http.HttpResponse;
-import java.time.Duration;
 
-public class WebhookHttpRetryer implements WebhookRetryer<HttpCommand> {
+public class WebhookHttpRetryer extends WebhookRetryer<HttpCommand, HttpResponse<String>> {
     private final WebhookHttpClient webhookHttpClient;
 
     public WebhookHttpRetryer(WebhookHttpClient webhookHttpClient) {
@@ -15,37 +14,20 @@ public class WebhookHttpRetryer implements WebhookRetryer<HttpCommand> {
     }
 
     @Override
-    public void attempt(HttpCommand httpCommand, RetryConfig retryConfig) {
-        for (int attemptCount = 1; attemptCount <= retryConfig.maxAttemptCount(); ++attemptCount) {
-            HttpResponse<String> response = webhookHttpClient.send(httpCommand);
-
-            logResponse(response);
-
-            if (!shouldRetry(retryConfig, response, attemptCount)) {
-                break;
-            }
-
-            waitBeforeNextAttempt(retryConfig, attemptCount);
-        }
+    protected HttpResponse<String> attempt(HttpCommand httpCommand, RetryConfig retryConfig) {
+        HttpResponse<String> response = webhookHttpClient.send(httpCommand);
+        logResponse(response);
+        return response;
     }
 
-    private static void logResponse(HttpResponse<String> response) {
+    private void logResponse(HttpResponse<String> response) {
         System.out.println("Status code: " + response.statusCode());
         System.out.println("Body: " + response.body());
-        System.out.println();
     }
 
-    private boolean shouldRetry(RetryConfig retryConfig, HttpResponse<String> response, int attemptCount) {
+    @Override
+    protected boolean shouldRetry(RetryConfig retryConfig, HttpResponse<String> response, int attemptCount) {
         return attemptCount < retryConfig.maxAttemptCount()
                 && retryConfig.retryableStatusCodes().contains(response.statusCode());
-    }
-
-    private void waitBeforeNextAttempt(RetryConfig retryConfig, int retryAttempt) {
-        try {
-            Duration waitDuration = retryConfig.attemptBackoffConfig().getWaitTime(retryAttempt);
-            Thread.sleep(waitDuration);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

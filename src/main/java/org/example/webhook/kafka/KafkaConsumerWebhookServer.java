@@ -46,7 +46,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
 
         config.put(ConsumerConfig.CLIENT_ID_CONFIG, "webhook_consumer" + UUID.randomUUID());
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer_group");
-        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "main_webhook_consumer_" + UUID.randomUUID());
+        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "main_webhook_consumer_instance");
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 
@@ -67,7 +67,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
             System.out.println("Polling... " + Instant.now());
             ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
             consumerRecords.forEach(this::handleConsumerRecord);
-            kafkaConsumer.commitSync(Duration.ofSeconds(500));
+            kafkaConsumer.commitSync();
         }
     }
 
@@ -77,7 +77,9 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
             WebhookEvent webhookEvent = consumerRecord.value();
 
             switch (webhookEvent.command()) {
-                case HttpCommand httpCommand -> webhookHttpRetryer.attempt(httpCommand, webhookEvent.retryConfig());
+                case HttpCommand httpCommand -> {
+                    webhookHttpRetryer.attemptWithRetry(httpCommand, webhookEvent.retryConfig());
+                }
             }
 
         } catch (Exception e) {

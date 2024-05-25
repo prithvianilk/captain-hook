@@ -34,7 +34,7 @@ public record RetryConfig(
 
     record ConstantBackoffConfig(Duration waitTime) implements AttemptBackoffConfig {
         @Override
-        public Duration getWaitTime(int ignoredAttemptCount) {
+        public Duration getWaitTime(int attemptCount) {
             return waitTime;
         }
     }
