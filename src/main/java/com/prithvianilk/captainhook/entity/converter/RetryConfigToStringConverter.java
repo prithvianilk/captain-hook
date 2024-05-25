@@ -1,4 +1,4 @@
-package com.prithvianilk.captainhook.entity;
+package com.prithvianilk.captainhook.entity.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;

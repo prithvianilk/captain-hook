@@ -1,6 +1,7 @@
 package com.prithvianilk.captainhook.entity;
 
 import com.prithvianilk.captainhook.domain.RetryConfig;
+import com.prithvianilk.captainhook.entity.converter.RetryConfigToStringConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
