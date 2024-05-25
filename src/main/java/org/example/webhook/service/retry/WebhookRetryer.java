@@ -21,7 +21,9 @@ public abstract class WebhookRetryer<C extends Command, R> {
                 return;
             }
 
-            waitBeforeNextAttempt(retryConfig, attemptCount);
+            if (attemptCount < retryConfig.maxAttemptCount()) {
+                waitBeforeNextAttempt(retryConfig, attemptCount);
+            }
         }
 
         throw new CommandAttemptFailedException();

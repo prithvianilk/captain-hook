@@ -15,7 +15,7 @@ public class EventTypeEntity {
     @Id
     String id;
 
-    @Column
+    @Column(nullable = false)
     @Convert(converter = RetryConfigToStringConverter.class)
     RetryConfig retryConfig;
 }

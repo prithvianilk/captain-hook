@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.webhook.domain.EventType;
 import org.example.webhook.dto.CreateEventTypeRequest;
+import org.example.webhook.service.EventTypeAlreadyExistsException;
 import org.example.webhook.service.EventTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,11 @@ public class EventTypeController {
     @PostMapping
     public ResponseEntity<EventType> create(@RequestBody CreateEventTypeRequest request) {
         EventType eventType = new EventType(request.getId(), request.getRetryConfig());
-        return ResponseEntity.ok(eventTypeService.createEventType(eventType));
+
+        try {
+            return ResponseEntity.ok(eventTypeService.createEventType(eventType));
+        } catch (EventTypeAlreadyExistsException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

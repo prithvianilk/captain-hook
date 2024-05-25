@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.webhook.domain.WebhookEvent;
 import org.example.webhook.dto.CreateWebhookEventRequest;
+import org.example.webhook.service.WebhookEventAlreadyExistsException;
 import org.example.webhook.service.WebhookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,10 @@ public class WebhookController {
     @PostMapping
     public ResponseEntity<WebhookEvent> create(@RequestBody CreateWebhookEventRequest request) {
         WebhookEvent webhookEvent = new WebhookEvent(request.id(), request.eventType(), request.command(), null);
-        return ResponseEntity.ok(webhookService.createWebhook(webhookEvent));
+        try {
+            return ResponseEntity.ok(webhookService.createWebhook(webhookEvent));
+        } catch (WebhookEventAlreadyExistsException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

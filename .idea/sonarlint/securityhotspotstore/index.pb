@@ -208,3 +208,11 @@ i
 9src/main/java/org/example/webhook/domain/HttpCommand.java,8/d/8d09989fcf7f76277bfa2b5e36c4d76776f39d20
 j
 :src/main/java/org/example/webhook/domain/WebhookEvent.java,e/d/ed1faf75d42df369e41ded929dfdd09a279af5e6
+q
+Asrc/main/java/org/example/webhook/service/EventAlreadyExists.java,3/7/37a32fd89e1aeba2208495d77b08f51b569700f5
+x
+Hsrc/main/java/org/example/webhook/service/WebhookEventAlreadyExists.java,9/3/93e87b8e7f420aaf0d0946b0e764b23472e6d138
+~
+Nsrc/main/java/org/example/webhook/service/EventTypeAlreadyExistsException.java,7/9/798ad4f0d98f5d462bcecac8ef07b40d0661a291
+Å
+Qsrc/main/java/org/example/webhook/service/WebhookEventAlreadyExistsException.java,7/a/7ae001b5dc4432b4185ec6d18a01b56dc6b3b2ce

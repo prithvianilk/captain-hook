@@ -1,4 +1,4 @@
 package org.example.webhook.service;
 
-public class WebhookEventAlreadyExists extends Exception {
+public class WebhookEventAlreadyExistsException extends Exception {
 }

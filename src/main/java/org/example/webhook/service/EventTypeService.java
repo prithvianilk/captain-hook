@@ -32,11 +32,17 @@ public class EventTypeService {
                 .toList();
     }
 
-    public EventType createEventType(EventType eventType) throws EventTypeCreationException {
+    public EventType createEventType(EventType eventType) throws EventTypeAlreadyExistsException {
+        if (eventTypeRepository.existsById(eventType.id())) {
+            throw new EventTypeAlreadyExistsException();
+        }
+
         EventTypeEntity eventTypeEntity = EventTypeEntityMapper.toEntity(eventType);
         eventTypeRepository.save(eventTypeEntity);
+
         webhookEventTypeManager.registerNewEventType(eventType);
         applicationEventPublisher.publishEvent(new NewEventTypeAddedEvent(this, eventType.id()));
+
         return eventType;
     }
 }

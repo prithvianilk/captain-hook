@@ -4,7 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.*;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.webhook.domain.Command;
 import org.example.webhook.domain.WebhookEvent;
@@ -15,17 +21,21 @@ import org.example.webhook.domain.WebhookEvent;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "webhook_events")
+@Table(name = "webhook_events", uniqueConstraints = {
+        @UniqueConstraint(name = "id_event_type_id", columnNames = {"id", "eventType"})
+})
 public class WebhookEventEntity {
     @Id
+    @Column(nullable = false)
     String id;
 
-    @Column
+    @Column(nullable = false)
     String eventType;
 
-    @Column
+    @Column(nullable = false)
     @Convert(converter = CommandToStringConverter.class)
     Command command;
 
-    @Column
+    @Column(nullable = false)
     WebhookEvent.Status status;
 }

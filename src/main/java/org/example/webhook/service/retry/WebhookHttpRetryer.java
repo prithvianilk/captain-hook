@@ -26,7 +26,6 @@ public class WebhookHttpRetryer extends WebhookRetryer<HttpCommand, HttpResponse
 
     @Override
     protected boolean shouldRetry(RetryConfig retryConfig, HttpResponse<String> response, int attemptCount) {
-        return attemptCount < retryConfig.maxAttemptCount()
-                && !retryConfig.successStatusCode().contains(response.statusCode());
+        return !retryConfig.successStatusCode().contains(response.statusCode());
     }
 }

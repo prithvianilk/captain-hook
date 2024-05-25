@@ -20,7 +20,11 @@ public class WebhookService {
 
     WebhookCreationClient webhookCreationClient;
 
-    public WebhookEvent createWebhook(WebhookEvent webhookEvent) throws WebhookCreationException {
+    public WebhookEvent createWebhook(WebhookEvent webhookEvent) throws WebhookEventAlreadyExistsException {
+        if (webhookRepository.existsByIdAndEventType(webhookEvent.id(), webhookEvent.eventType())) {
+            throw new WebhookEventAlreadyExistsException();
+        }
+
         WebhookEventEntity webhookEventEntity = WebhookEntityMapper.toEntity(webhookEvent, WebhookEvent.Status.CREATED);
         webhookRepository.save(webhookEventEntity);
         webhookCreationClient.publish(webhookEvent.eventType(), webhookEvent);

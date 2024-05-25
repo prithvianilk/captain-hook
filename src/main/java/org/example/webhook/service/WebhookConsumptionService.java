@@ -37,7 +37,9 @@ public class WebhookConsumptionService {
     }
 
     @EventListener(value = NewEventTypeAddedEvent.class)
-    public void listen(NewEventTypeAddedEvent ignoredEvent) {
+    public void listen(NewEventTypeAddedEvent event) {
+        log.info("Restarting consumers due to new event_type addition: {}", event.getEventType());
+
         executorService.shutdownNow();
         executorService = Executors.newVirtualThreadPerTaskExecutor();
 
