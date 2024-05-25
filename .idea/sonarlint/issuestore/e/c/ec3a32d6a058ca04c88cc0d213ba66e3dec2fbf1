@@ -1,10 +1,7 @@
 
-g	java:S112="FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8±Âõú1
-g	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8²Âõú1
-g	java:S112q"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8²Âõú1
-D
-java:S2189H""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8¾Âõú1
-L	java:S106I"+Replace this use of System.out by a logger.(şËêÁøÿÿÿÿ8×Âõú1
-{
-java:S2142V"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ØÂõú1
-L	java:S106U"+Replace this use of System.out by a logger.(€¢£Áÿÿÿÿÿ8ØÂõú1
+	java:S1126"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8àÎÏõú1J$1d567a14-ec0e-4fc9-8128-488da6b3777c
+	java:S112O"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8áÎÏõú1J$58d60024-9532-48d4-9643-ba6efafa883a
+j
+java:S2189A""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8çÎÏõú1J$d075e1f5-34d4-45c4-b789-2d89711cac4a
+m	java:S106B"+Replace this use of System.out by a logger.(ßù¶÷8ïÎÏõú1J$d97c54fd-577e-4179-b35d-9b3a7db84b9d
+l	java:S106M"+Replace this use of System.out by a logger.(ŠÄë8ğÎÏõú1J$2d420a77-cfea-49b5-af47-ab620bb4acda
