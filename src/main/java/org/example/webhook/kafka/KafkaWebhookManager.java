@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class KafkaWebhookManager implements WebhookManager {
     private final AdminClient adminClient;
@@ -28,29 +30,22 @@ public class KafkaWebhookManager implements WebhookManager {
                 .map(eventType -> new NewTopic(eventType, 1, (short) 1))
                 .toList();
 
-        CreateTopicsResult result = adminClient.createTopics(newTopics);
-        result.all();
+        adminClient.createTopics(newTopics);
     }
 
     @Override
-    public Collection<String> getEventTypes() {
+    public Collection<String> getRegisteredEventTypes() {
         try {
-            return adminClient.listTopics().names().get();
+            return adminClient.listTopics().names().get(5, TimeUnit.SECONDS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private Properties getProperties() {
-        try {
-            Properties config = new Properties();
-            config.put(CommonClientConfigs.CLIENT_ID_CONFIG, InetAddress.getLocalHost().getHostName());
-            config.put(CommonClientConfigs.GROUP_ID_CONFIG, "foo");
-            config.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.LOCAL_KAFKA_BOOTSTRAP_SERVER);
-            config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
-            return config;
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+        Properties config = new Properties();
+        config.put(CommonClientConfigs.CLIENT_ID_CONFIG, "webhook_manager:" + UUID.randomUUID());
+        config.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.LOCAL_KAFKA_BOOTSTRAP_SERVER);
+        return config;
     }
 }

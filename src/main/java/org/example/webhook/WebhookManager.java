@@ -6,5 +6,5 @@ import java.util.List;
 public interface WebhookManager {
     void registerNewEventTypes(List<String> eventTypes);
 
-    Collection<String> getEventTypes();
+    Collection<String> getRegisteredEventTypes();
 }

@@ -13,6 +13,7 @@ import org.example.webhook.kafka.KafkaWebhookManager;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -20,15 +21,15 @@ public class Main {
 
         WebhookManager webhookManager = new KafkaWebhookManager();
         webhookManager.registerNewEventTypes(eventTypes);
-        System.out.println("Events: " + webhookManager.getEventTypes());
+        System.out.println("Registered events: " + webhookManager.getRegisteredEventTypes());
 
-        WebhookServer webhookServer = new KafkaConsumerWebhookServer(eventTypes);
+        WebhookServer webhookServer = new KafkaConsumerWebhookServer(eventTypes.getFirst());
         webhookServer.start();
 
         WebhookClient client = new KafkaProducerWebhookClient();
         for (int i = 0; i < 10; ++i) {
             HttpCommand command = new HttpCommand("https://dummyjson.com/users", HttpCommand.Method.GET, Collections.emptyMap(), null);
-            client.publish(eventTypes.get(0), new WebhookEvent(command, RetryConfig.singleAttempt()));
+            client.publish(eventTypes.getFirst(), new WebhookEvent(UUID.randomUUID().toString(), command, RetryConfig.singleAttempt()));
         }
 
         Thread.sleep(Duration.ofMinutes(5));

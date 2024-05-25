@@ -96,3 +96,5 @@ k
 ;src/main/java/org/example/webhook/retry/WebhookRetryer.java,b/a/ba77184f1cbbdd1f608d0f996d54eded1292278a
 d
 4src/main/java/org/example/webhook/event/Command.java,b/1/b1ab7d079a16b0fbb69f8ce5b2273d915842d373
+k
+;src/main/java/org/example/webhook/retry/RetryerFactory.java,e/7/e7b1f24c1f6c686eb51b66cf97a3b4795d6bf61a

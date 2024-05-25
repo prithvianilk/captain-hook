@@ -1,2 +1,15 @@
 
-	java:S112$"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8“¸¤ôú1J$7bbedf49-144c-4608-b907-ff9084b749c1
+	java:S112/"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8º³æøú1J$61c85b0c-71ca-45c7-a24c-49716867d48d
+¡
+java:S2142."^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8Ê³æøú1J$c367b748-4d38-4a5d-ae0a-38fce56b4caa
+r	java:S106-"+Replace this use of System.out by a logger.(Í¥˜¦üÿÿÿÿ8Ë³æøú1J$2a154fb2-a0ce-44fc-9f00-ede2d8deb246
+y
+java:S1128"1Remove this unused import 'java.net.InetAddress'.(ë³ƒÒÿÿÿÿÿ8Ì³æøú1J$34addc13-40e1-4ae1-9c81-d8787392caad
+‚
+java:S1128":Remove this unused import 'java.net.UnknownHostException'.(Ú·¬˜úÿÿÿÿ8Ì³æøú1J$be9a866f-9e82-402c-b1b7-ac974c255766
+w
+java:S1128"/Remove this unused import 'java.time.Duration'.(ëá¯‰üÿÿÿÿ8Ì³æøú1J$a3ce7b52-a4f4-48e1-ac3e-91153f64c529
+‡
+java:S1128"DRemove this unused import 'java.util.concurrent.ExecutionException'.(¡£ØÍ8Ì³æøú1J$1d6a4fa3-2220-439f-8b82-8b3637378aa3
+€
+java:S1128"8Remove this unused import 'java.util.concurrent.Future'.(á¬øíıÿÿÿÿ8Ì³æøú1J$ce172788-e0d7-41ed-849b-69ecbfe51d65

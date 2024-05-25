@@ -1,4 +1,4 @@
 package org.example.webhook.event;
 
-public record WebhookEvent(Command command, RetryConfig retryConfig) {
+public record WebhookEvent(String eventId, Command command, RetryConfig retryConfig) {
 }
