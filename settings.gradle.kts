@@ -1,2 +1,2 @@
-rootProject.name = "kafka-webook-example"
+rootProject.name = "captainhook"
 
