@@ -1,4 +1,4 @@
 
 ¡
-java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ß††‹û1J$91e41b4a-ad90-41a2-bee3-e4e715b4c3ff
-r	java:S106 "+Replace this use of System.out by a logger.(¸Ó¿şÿÿÿÿ8Ãô‡‹û1J$b272cf5a-28a4-4197-a39f-6cce46cb9aea
+java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ß††‹û1J$05eadc92-d6e4-4934-85f3-e86a4f70b7c5
+r	java:S106 "+Replace this use of System.out by a logger.(¸Ó¿şÿÿÿÿ8Ãô‡‹û1J$f72afbfa-0ad6-4f41-8c98-5a8f305ab28e

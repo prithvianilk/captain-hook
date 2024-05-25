@@ -1,7 +1,7 @@
 package org.example.webhook.service.retry;
 
-import org.example.webhook.domain.event.Command;
-import org.example.webhook.domain.event.RetryConfig;
+import org.example.webhook.domain.Command;
+import org.example.webhook.domain.RetryConfig;
 
 import java.time.Duration;
 

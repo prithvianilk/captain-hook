@@ -1,7 +1,7 @@
 package org.example.webhook.mapper;
 
 import lombok.experimental.UtilityClass;
-import org.example.webhook.domain.event.WebhookEvent;
+import org.example.webhook.domain.WebhookEvent;
 import org.example.webhook.entity.WebhookEventEntity;
 
 @UtilityClass
@@ -10,6 +10,7 @@ public class WebhookEntityMapper {
         return WebhookEventEntity
                 .builder()
                 .id(webhookEvent.id())
+                .eventType(webhookEvent.eventType())
                 .command(webhookEvent.command())
                 .status(status)
                 .build();

@@ -1,4 +1,4 @@
-package org.example.webhook.domain.event;
+package org.example.webhook.domain;
 
 public record EventType(String id, RetryConfig retryConfig) {
 }

@@ -1,14 +1,22 @@
 package org.example.webhook.service.kafka;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.example.webhook.domain.event.EventType;
+import org.example.webhook.domain.EventType;
 import org.example.webhook.service.WebhookEventTypeManager;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaWebhookEventTypeManager implements WebhookEventTypeManager {
     private final AdminClient adminClient;
 

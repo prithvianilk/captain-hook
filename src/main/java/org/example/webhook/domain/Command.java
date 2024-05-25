@@ -1,4 +1,4 @@
-package org.example.webhook.domain.event;
+package org.example.webhook.domain;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

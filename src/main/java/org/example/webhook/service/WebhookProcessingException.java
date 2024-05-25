@@ -2,7 +2,7 @@ package org.example.webhook.service;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.webhook.domain.event.WebhookEvent;
+import org.example.webhook.domain.WebhookEvent;
 
 @Getter
 @RequiredArgsConstructor

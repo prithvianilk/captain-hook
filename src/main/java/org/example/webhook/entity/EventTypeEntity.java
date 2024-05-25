@@ -1,16 +1,21 @@
 package org.example.webhook.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.webhook.domain.event.RetryConfig;
+import org.example.webhook.domain.RetryConfig;
 
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity(name = "event_types")
 public class EventTypeEntity {
+    @Id
     String id;
 
+    @Column
+    @Convert(converter = RetryConfigToStringConverter.class)
     RetryConfig retryConfig;
 }

@@ -1,6 +1,6 @@
 package org.example.webhook.service;
 
-import org.example.webhook.domain.event.EventType;
+import org.example.webhook.domain.EventType;
 
 import java.util.Set;
 

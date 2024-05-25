@@ -1,12 +1,20 @@
 package org.example.webhook.service;
 
-import org.example.webhook.domain.event.WebhookEvent;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.example.webhook.domain.WebhookEvent;
 import org.example.webhook.entity.WebhookEventEntity;
 import org.example.webhook.mapper.WebhookEntityMapper;
 import org.example.webhook.repository.WebhookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class WebhookService {
     WebhookRepository webhookRepository;
 

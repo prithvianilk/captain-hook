@@ -1,22 +1,27 @@
 package org.example.webhook.service.kafka;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.webhook.domain.WebhookEvent;
 import org.example.webhook.service.WebhookCreationClient;
-import org.example.webhook.domain.event.WebhookEvent;
 import org.example.webhook.service.kafka.serialization.JacksonObjectMapperKafkaValueSerializer;
+import org.springframework.stereotype.Service;
 
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
+@Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaProducerWebhookCreationClient implements WebhookCreationClient {
-    private final KafkaProducer<String, WebhookEvent> kafkaProducer;
+    KafkaProducer<String, WebhookEvent> kafkaProducer;
 
     public KafkaProducerWebhookCreationClient() {
         Properties config = getProperties();

@@ -1,4 +1,4 @@
-package org.example.webhook.domain.event;
+package org.example.webhook.domain;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -13,7 +13,7 @@ public record RetryConfig(
         AttemptBackoffConfig attemptBackoffConfig) {
 
     public static RetryConfig singleAttempt() {
-        return new RetryConfig(Collections.emptyList(), 1, new NoOpBackoffConfig());
+        return new RetryConfig(Collections.singletonList(200), 1, new NoOpBackoffConfig());
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")

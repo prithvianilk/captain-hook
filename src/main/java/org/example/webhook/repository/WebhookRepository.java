@@ -1,13 +1,10 @@
 package org.example.webhook.repository;
 
-import org.example.webhook.domain.event.WebhookEvent;
 import org.example.webhook.entity.WebhookEventEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
 import java.util.List;
 
-public interface WebhookRepository {
-    void save(WebhookEventEntity webhookEvent);
-
+public interface WebhookRepository extends JpaRepository<WebhookEventEntity, String> {
     List<WebhookEventEntity> findAllByEventType(String eventType);
 }

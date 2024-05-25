@@ -1,10 +1,8 @@
 package org.example.webhook.service;
 
-import org.example.webhook.domain.event.EventType;
-import org.example.webhook.domain.event.WebhookEvent;
-import org.example.webhook.service.kafka.KafkaConsumerWebhookProcessingService;
+import org.example.webhook.domain.EventType;
+import org.example.webhook.domain.WebhookEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 public abstract class WebhookProcessingService {

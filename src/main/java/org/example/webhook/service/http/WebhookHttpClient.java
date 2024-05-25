@@ -2,12 +2,13 @@ package org.example.webhook.service.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.webhook.domain.event.HttpCommand;
+import org.example.webhook.domain.HttpCommand;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 
 public class WebhookHttpClient {
     private final HttpClient httpClient;
@@ -31,7 +32,7 @@ public class WebhookHttpClient {
     public HttpRequest getHttpRequest(HttpCommand httpCommand) {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(httpCommand.url()));
 
-        for (var entry : httpCommand.headers().entrySet()) {
+        for (Map.Entry<String, String> entry : httpCommand.headers().entrySet()) {
             requestBuilder = requestBuilder.header(entry.getKey(), entry.getValue());
         }
 

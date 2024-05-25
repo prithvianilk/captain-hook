@@ -1,14 +1,14 @@
 package org.example.webhook.service.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.example.webhook.domain.event.EventType;
-import org.example.webhook.domain.event.HttpCommand;
-import org.example.webhook.domain.event.WebhookEvent;
-import org.example.webhook.service.WebhookCreationException;
+import org.example.webhook.domain.EventType;
+import org.example.webhook.domain.HttpCommand;
+import org.example.webhook.domain.WebhookEvent;
 import org.example.webhook.service.WebhookProcessingException;
 import org.example.webhook.service.WebhookProcessingService;
 import org.example.webhook.service.http.WebhookHttpClient;
@@ -16,14 +16,12 @@ import org.example.webhook.service.kafka.serialization.JacksonObjectMapperKafkaV
 import org.example.webhook.service.retry.WebhookHttpRetryer;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
+@Slf4j
 public class KafkaConsumerWebhookProcessingService extends WebhookProcessingService {
     private final KafkaConsumer<String, WebhookEvent> kafkaConsumer;
 
@@ -59,7 +57,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
 
     @Override
     public WebhookConsumptionResult pollAndConsume() {
-        System.out.println("Polling... " + Instant.now());
+        log.info("Polling...");
         ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
 
         for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {
@@ -79,7 +77,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
     }
 
     private WebhookEvent handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) throws WebhookProcessingException {
-        System.out.println("Handling offset: " + consumerRecord.offset());
+        log.info("Handling offset: {}", consumerRecord.offset());
         WebhookEvent webhookEvent = consumerRecord.value();
 
         try {
@@ -90,7 +88,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
             }
             return webhookEvent;
         } catch (Exception e) {
-            System.out.println("Webhook processing failed for: " + consumerRecord.offset());
+            log.error("Webhook processing failed for: {}", consumerRecord.offset(), e);
             throw new WebhookProcessingException(webhookEvent);
         }
     }
