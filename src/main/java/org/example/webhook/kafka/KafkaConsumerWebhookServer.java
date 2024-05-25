@@ -10,6 +10,8 @@ import org.example.webhook.WebhookServer;
 import org.example.webhook.event.WebhookEvent;
 import org.example.webhook.http.WebhookHttpClient;
 import org.example.webhook.kafka.serialization.JacksonObjectMapperKafkaValueDeserializer;
+import org.example.webhook.retry.WebhookHttpRetryer;
+import org.example.webhook.retry.WebhookRetryer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,7 +28,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
 
     private final ExecutorService executorService;
 
-    private final WebhookHttpClient httpClient;
+    private final WebhookRetryer webhookRetryer;
 
 
     public KafkaConsumerWebhookServer(String... eventTypes) {
@@ -38,7 +40,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
         Properties config = getProperties();
         kafkaConsumer = new KafkaConsumer<>(config);
         executorService = Executors.newVirtualThreadPerTaskExecutor();
-        httpClient = new WebhookHttpClient();
+        webhookRetryer = new WebhookHttpRetryer(new WebhookHttpClient());
     }
 
     private Properties getProperties() {
@@ -73,8 +75,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
     private void handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) {
         try {
             WebhookEvent webhookEvent = consumerRecord.value();
-            String body = httpClient.send(webhookEvent.httpCommand()).body();
-            System.out.println(body);
+            webhookRetryer.attempt(webhookEvent.command(), webhookEvent.retryConfig());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
