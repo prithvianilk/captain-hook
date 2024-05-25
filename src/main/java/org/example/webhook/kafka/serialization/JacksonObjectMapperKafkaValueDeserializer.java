@@ -1,7 +1,8 @@
-package org.example;
+package org.example.webhook.kafka.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Deserializer;
+import org.example.webhook.event.WebhookEvent;
 
 import java.io.IOException;
 

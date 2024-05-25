@@ -1,0 +1,10 @@
+
+g	java:S112="FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8±Âõú1
+g	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8²Âõú1
+g	java:S112q"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8²Âõú1
+D
+java:S2189H""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8¾Âõú1
+L	java:S106I"+Replace this use of System.out by a logger.(şËêÁøÿÿÿÿ8×Âõú1
+{
+java:S2142V"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ØÂõú1
+L	java:S106U"+Replace this use of System.out by a logger.(€¢£Áÿÿÿÿÿ8ØÂõú1

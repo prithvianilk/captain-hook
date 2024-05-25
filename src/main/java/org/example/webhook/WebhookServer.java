@@ -1,4 +1,4 @@
-package org.example;
+package org.example.webhook;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public abstract class WebhookServer {
         return eventTypes;
     }
 
-    protected abstract void start();
+    public abstract void start();
 }

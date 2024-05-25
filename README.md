@@ -12,3 +12,14 @@
 - Webhook client
     - Provides API (just a method bro) to publish an event
     - One implementation would be the kafka based webhook client
+
+### Webhook event
+
+- HttpCommand
+    - url
+    - method
+    - headers
+    - body
+- Retry config
+    - Retryable http success codes
+    - Max attempt count
