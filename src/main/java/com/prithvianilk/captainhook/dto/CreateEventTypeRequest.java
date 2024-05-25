@@ -7,12 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
-public class CreateEventTypeRequest {
-    String id;
+import java.util.Optional;
 
-    RetryConfig retryConfig = RetryConfig.singleAttempt();
+public record CreateEventTypeRequest(String id, RetryConfig retryConfig) {
+    @Override
+    public RetryConfig retryConfig() {
+        return Optional.ofNullable(retryConfig).orElseGet(RetryConfig::singleAttempt);
+    }
 }

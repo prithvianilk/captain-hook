@@ -27,7 +27,7 @@ public class EventTypeController {
 
     @PostMapping
     public ResponseEntity<EventType> create(@RequestBody CreateEventTypeRequest request) {
-        EventType eventType = new EventType(request.getId(), request.getRetryConfig());
+        EventType eventType = new EventType(request.id(), request.retryConfig());
 
         try {
             return ResponseEntity.ok(eventTypeService.createEventType(eventType));
