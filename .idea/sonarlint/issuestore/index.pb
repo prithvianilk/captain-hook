@@ -206,3 +206,5 @@ e
 5src/main/java/org/example/webhook/domain/Command.java,7/a/7a9e2baf73288ca6be85eb78d3259bf258e98d1d
 i
 9src/main/java/org/example/webhook/domain/HttpCommand.java,8/d/8d09989fcf7f76277bfa2b5e36c4d76776f39d20
+j
+:src/main/java/org/example/webhook/domain/WebhookEvent.java,e/d/ed1faf75d42df369e41ded929dfdd09a279af5e6

@@ -2,6 +2,7 @@ package org.example.webhook.service.kafka;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
+@Slf4j
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaProducerWebhookCreationClient implements WebhookCreationClient {
@@ -42,8 +44,9 @@ public class KafkaProducerWebhookCreationClient implements WebhookCreationClient
         try {
             ProducerRecord<String, WebhookEvent> producerRecord = new ProducerRecord<>(eventType, webhookEvent.id(), webhookEvent);
             RecordMetadata recordMetadata = kafkaProducer.send(producerRecord).get(5, TimeUnit.SECONDS);
-            System.out.println("Published: " + recordMetadata);
+            log.info("Published: {}", recordMetadata);
         } catch (Exception e) {
+            log.error("Failed to publish", e);
             throw new RuntimeException(e);
         }
     }

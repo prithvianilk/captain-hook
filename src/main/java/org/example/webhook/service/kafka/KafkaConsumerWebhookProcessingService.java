@@ -40,7 +40,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
 
         config.put(ConsumerConfig.CLIENT_ID_CONFIG, "webhook_consumer" + UUID.randomUUID());
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer_group");
-        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "main_webhook_consumer_instance");
+        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, eventType.id());
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 

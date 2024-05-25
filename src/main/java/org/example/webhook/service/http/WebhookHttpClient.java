@@ -2,7 +2,9 @@ package org.example.webhook.service.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webhook.domain.HttpCommand;
+import org.example.webhook.service.retry.CommandAttemptFailedException;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
+@Slf4j
 public class WebhookHttpClient {
     private final HttpClient httpClient;
 
@@ -25,7 +28,8 @@ public class WebhookHttpClient {
         try {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("Failed to sent http request", e);
+            throw new CommandAttemptFailedException();
         }
     }
 
@@ -51,7 +55,8 @@ public class WebhookHttpClient {
             String bodyAsString = objectMapper.writeValueAsString(httpCommand.body());
             return HttpRequest.BodyPublishers.ofString(bodyAsString);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            log.error("Failed to write body as string", e);
+            throw new CommandAttemptFailedException();
         }
     }
 }
