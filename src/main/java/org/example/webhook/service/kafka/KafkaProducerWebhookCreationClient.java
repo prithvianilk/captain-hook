@@ -35,7 +35,7 @@ public class KafkaProducerWebhookCreationClient implements WebhookCreationClient
     @Override
     public void publish(String eventType, WebhookEvent webhookEvent) {
         try {
-            ProducerRecord<String, WebhookEvent> producerRecord = new ProducerRecord<>(eventType, webhookEvent.eventId(), webhookEvent);
+            ProducerRecord<String, WebhookEvent> producerRecord = new ProducerRecord<>(eventType, webhookEvent.id(), webhookEvent);
             RecordMetadata recordMetadata = kafkaProducer.send(producerRecord).get(5, TimeUnit.SECONDS);
             System.out.println("Published: " + recordMetadata);
         } catch (Exception e) {

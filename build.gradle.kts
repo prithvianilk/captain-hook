@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.32")
+
     implementation("org.apache.kafka:kafka-clients:3.7.0")
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.17.1")

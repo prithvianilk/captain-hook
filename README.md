@@ -33,15 +33,18 @@
 
 ### Create event type
 
-- Validate if event_type already exists
-- If not, create new event type w/ retry configuration
+- Create new event type w/ retry configuration
 - Create topic with event name on kafka
 
 ### Create webhook
 
-- Find if webhook already exists with webhook_id and event_type
-- Create webhook w/ webhook_id, event_type, http_command, status = CREATED
+- Create new webhook w/ webhook_id, event_type, http_command, status = CREATED
 - Publish webhook event to kafka
+
+### Webhook processor worker starts
+
+- Read all event_types
+- Start a webhook processor for each event_type
 
 ### Process webhook
 

@@ -3,34 +3,28 @@ package org.example.webhook.service.kafka;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.example.webhook.service.WebhookManager;
+import org.example.webhook.domain.event.EventType;
+import org.example.webhook.service.WebhookEventTypeManager;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class KafkaWebhookManager implements WebhookManager {
+public class KafkaWebhookEventTypeManager implements WebhookEventTypeManager {
     private final AdminClient adminClient;
 
-    public KafkaWebhookManager() {
+    public KafkaWebhookEventTypeManager() {
         Properties config = getProperties();
         adminClient = AdminClient.create(config);
     }
 
     @Override
-    public void registerNewEventTypes(List<String> eventTypes) {
-        List<NewTopic> newTopics = eventTypes
-                .stream()
-                .map(eventType -> new NewTopic(eventType, 1, (short) 1))
-                .toList();
-
-        adminClient.createTopics(newTopics);
+    public void registerNewEventType(EventType eventType) {
+        NewTopic newTopic = new NewTopic(eventType.id(), 1, (short) 1);
+        adminClient.createTopics(Collections.singletonList(newTopic));
     }
 
     @Override
-    public Collection<String> getRegisteredEventTypes() {
+    public Set<String> getRegisteredEventTypes() {
         try {
             return adminClient.listTopics().names().get(5, TimeUnit.SECONDS);
         } catch (Exception e) {

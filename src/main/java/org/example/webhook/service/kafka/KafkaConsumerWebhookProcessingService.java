@@ -5,38 +5,32 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.example.webhook.service.WebhookProcessingServer;
+import org.example.webhook.domain.event.EventType;
 import org.example.webhook.domain.event.HttpCommand;
 import org.example.webhook.domain.event.WebhookEvent;
+import org.example.webhook.service.WebhookProcessingService;
 import org.example.webhook.service.http.WebhookHttpClient;
 import org.example.webhook.service.kafka.serialization.JacksonObjectMapperKafkaValueDeserializer;
 import org.example.webhook.service.retry.WebhookHttpRetryer;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class KafkaConsumerWebhookProcessingServer extends WebhookProcessingServer {
+public class KafkaConsumerWebhookProcessingService extends WebhookProcessingService {
     private final KafkaConsumer<String, WebhookEvent> kafkaConsumer;
-
-    private final ExecutorService executorService;
 
     private final WebhookHttpRetryer webhookHttpRetryer;
 
-    public KafkaConsumerWebhookProcessingServer(String... eventTypes) {
-        this(Arrays.asList(eventTypes));
-    }
-
-    public KafkaConsumerWebhookProcessingServer(List<String> eventTypes) {
-        super(eventTypes);
+    public KafkaConsumerWebhookProcessingService(EventType eventType) {
+        super(eventType);
         Properties config = getProperties();
         kafkaConsumer = new KafkaConsumer<>(config);
-        executorService = Executors.newVirtualThreadPerTaskExecutor();
         webhookHttpRetryer = new WebhookHttpRetryer(new WebhookHttpClient());
     }
 
@@ -58,30 +52,35 @@ public class KafkaConsumerWebhookProcessingServer extends WebhookProcessingServe
 
     @Override
     public void start() {
-        kafkaConsumer.subscribe(getEventTypes());
-        executorService.submit(this::pollAndConsume);
+        kafkaConsumer.subscribe(Collections.singleton(eventType.id()));
     }
 
-    private void pollAndConsume() {
-        while (true) {
-            System.out.println("Polling... " + Instant.now());
-            ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
-            consumerRecords.forEach(this::handleConsumerRecord);
-            kafkaConsumer.commitSync();
+    @Override
+    public Optional<WebhookEvent> pollAndConsume() {
+        System.out.println("Polling... " + Instant.now());
+        ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
+
+        List<WebhookEvent> webhookEvents = new ArrayList<>();
+        for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {
+            webhookEvents.add(handleConsumerRecord(consumerRecord));
         }
+        kafkaConsumer.commitSync();
+
+        return webhookEvents.stream().findAny();
     }
 
-    private void handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) {
+    private WebhookEvent handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) {
         try {
             System.out.println("Handling offset: " + consumerRecord.offset());
             WebhookEvent webhookEvent = consumerRecord.value();
 
             switch (webhookEvent.command()) {
                 case HttpCommand httpCommand -> {
-                    webhookHttpRetryer.attemptWithRetry(httpCommand, webhookEvent.retryConfig());
+                    webhookHttpRetryer.attemptWithRetry(httpCommand, eventType.retryConfig());
                 }
             }
 
+            return webhookEvent;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

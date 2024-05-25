@@ -1,6 +1,10 @@
 
-	java:S112V"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8¿€íşú1J$47056638-7cd8-4316-b708-81bf8e6b4970
-m	java:S106C"+Replace this use of System.out by a logger.(ßù¶÷8Î€íşú1J$1efd1a7b-0767-44ac-9437-4b96f111e847
-m	java:S106L"+Replace this use of System.out by a logger.(õŞğÎ8ùöşú1J$86f355ed-8212-4dcf-bf35-335b469dc492
+	java:S112S"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8¿€íşú1J$02eb3ee5-21a3-47f4-a739-c2989287bb6b
+m	java:S106A"+Replace this use of System.out by a logger.(ßù¶÷8Î€íşú1J$e9706670-04e6-41cb-ab2f-66f4fcba79b9
+m	java:S106I"+Replace this use of System.out by a logger.(õŞğÎ8ùöşú1J$ec2d90b5-d3ee-4ffd-8b49-d5f1dc0f6a7a
 d
-java:S6205P"Remove this redundant block.(‹£¾øıÿÿÿÿ8ÀãÅ„û1J$f519185f-c369-497f-b8bd-8fe83c09041f
+java:S6205M"Remove this redundant block.(‹£¾øıÿÿÿÿ8ÀãÅ„û1J$06fb0773-783c-446c-a31c-a0886d996ae8
+U
+java:S1068"3Remove this unused "executorService" private field.(¯çÂƒşÿÿÿÿ8áÕãˆû1
+U
+java:S1144@"3Remove this unused private "pollAndConsume" method.(áŒÈüÿÿÿÿ8âÕãˆû1
