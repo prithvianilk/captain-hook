@@ -1,6 +1,6 @@
 
-	java:S112P"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òιόÿÿÿÿ8άίωϊ1J$1457f6c9-9cb4-4ef2-b6b8-2d4ed719b450
+	java:S112T"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òιόÿÿÿÿ8Ώ€νώϊ1J$d05fd283-ea3d-4364-a826-9cb3a540e585
 j
-java:S2189>""Add an end condition to this loop.(οÿÿÿÿÿ8•άίωϊ1J$a19fbb01-e376-4b66-91fc-af244c0fdc61
-m	java:S106?"+Replace this use of System.out by a logger.(ίω¶χ8£άίωϊ1J$e37499c0-82da-4ceb-b9ea-b2742c298f8d
-r	java:S106H"+Replace this use of System.out by a logger.(ϊ»Εϊÿÿÿÿ8¤άίωϊ1J$9b2a10b5-ede4-45e3-8ccb-a3e3a4d58eae
+java:S2189B""Add an end condition to this loop.(οÿÿÿÿÿ8Ζ€νώϊ1J$60f3d37f-a28f-4689-a931-fdcca05c0c1c
+m	java:S106C"+Replace this use of System.out by a logger.(ίω¶χ8Ξ€νώϊ1J$a15a8d89-14a1-4dde-b889-da2181c30337
+m	java:S106L"+Replace this use of System.out by a logger.(υήπΞ8ωφώϊ1J$119267c0-8111-43c2-bcd4-e9fd37d1bccb

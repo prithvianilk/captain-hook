@@ -19,12 +19,20 @@ public class WebhookHttpRetryer implements WebhookRetryer<HttpCommand> {
         for (int attemptCount = 1; attemptCount <= retryConfig.maxAttemptCount(); ++attemptCount) {
             HttpResponse<String> response = webhookHttpClient.send(httpCommand);
 
+            logResponse(response);
+
             if (!shouldRetry(retryConfig, response, attemptCount)) {
                 break;
             }
 
             waitBeforeNextAttempt(retryConfig, attemptCount);
         }
+    }
+
+    private static void logResponse(HttpResponse<String> response) {
+        System.out.println("Status code: " + response.statusCode());
+        System.out.println("Body: " + response.body());
+        System.out.println();
     }
 
     private boolean shouldRetry(RetryConfig retryConfig, HttpResponse<String> response, int attemptCount) {

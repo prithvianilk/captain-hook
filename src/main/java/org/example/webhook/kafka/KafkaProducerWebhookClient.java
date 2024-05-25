@@ -42,7 +42,7 @@ public class KafkaProducerWebhookClient implements WebhookClient {
         try {
             ProducerRecord<String, WebhookEvent> producerRecord = new ProducerRecord<>(eventType, webhookEvent.eventId(), webhookEvent);
             RecordMetadata recordMetadata = kafkaProducer.send(producerRecord).get(5, TimeUnit.SECONDS);
-            System.out.println("Topic: " + recordMetadata.topic() + ", Partition: " + recordMetadata.partition());
+            System.out.println("Published: " + recordMetadata);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

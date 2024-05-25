@@ -43,12 +43,16 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
     private Properties getProperties() {
         Properties config = new Properties();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.LOCAL_KAFKA_BOOTSTRAP_SERVER);
-        config.put(ConsumerConfig.CLIENT_ID_CONFIG, "webhook_consumer:" + UUID.randomUUID());
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer_group:" + UUID.randomUUID());
+
+        config.put(ConsumerConfig.CLIENT_ID_CONFIG, "webhook_consumer" + UUID.randomUUID());
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer_group");
         config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "main_webhook_consumer_" + UUID.randomUUID());
+        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
+
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonObjectMapperKafkaValueDeserializer.class);
+
         return config;
     }
 
@@ -69,7 +73,7 @@ public class KafkaConsumerWebhookServer extends WebhookServer {
 
     private void handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) {
         try {
-            System.out.println(consumerRecord);
+            System.out.println("Handling offset: " + consumerRecord.offset());
             WebhookEvent webhookEvent = consumerRecord.value();
 
             switch (webhookEvent.command()) {

@@ -14,6 +14,7 @@ public class JacksonObjectMapperKafkaValueDeserializer implements Deserializer<W
         try {
             return OBJECT_MAPPER.readValue(data, WebhookEvent.class);
         } catch (IOException e) {
+            System.out.println("Deserialization failed: " + e);
             throw new RuntimeException(e);
         }
     }

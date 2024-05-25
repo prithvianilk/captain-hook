@@ -27,11 +27,10 @@ public class Main {
         webhookServer.start();
 
         WebhookClient client = new KafkaProducerWebhookClient();
-        for (int i = 0; i < 10; ++i) {
+        while (true) {
             HttpCommand command = new HttpCommand("https://dummyjson.com/users", HttpCommand.Method.GET, Collections.emptyMap(), null);
             client.publish(eventTypes.getFirst(), new WebhookEvent(UUID.randomUUID().toString(), command, RetryConfig.singleAttempt()));
+            Thread.sleep(Duration.ofSeconds(10));
         }
-
-        Thread.sleep(Duration.ofMinutes(5));
     }
 }
