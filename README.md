@@ -49,13 +49,12 @@
 ### Process webhook
 
 - Consume events from kafka
-- Read retry config from db
 - Attempt processing of event with retry config
     - Sleep application thread on wait
+- Commit message on kafka
 - If processing successful, update status of event to COMPLETED
 - Else, update status to FAILED
-- Commit message on kafka
 
 ### View all webhooks by event_type and status
 
-- Find all webhooks by status
+- Find all webhooks by event_type &/ status

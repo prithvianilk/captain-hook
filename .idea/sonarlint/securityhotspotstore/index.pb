@@ -174,3 +174,5 @@ p
 @src/main/java/org/example/webhook/entity/WebhookEventEntity.java,f/6/f6b868611ad72506f74ee6c799bd4bbe59bca8dc
 q
 Asrc/main/java/org/example/webhook/mapper/WebhookEntityMapper.java,f/a/fa50e3c2b8d48dfd1dba8f01f3b355f79a677995
+‚
+Rsrc/main/java/org/example/webhook/service/retry/CommandAttemptFailedException.java,3/8/38033a47ec4d3777ef9bb2cc13f44934f87b8f26

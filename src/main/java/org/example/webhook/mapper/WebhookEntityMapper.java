@@ -6,12 +6,16 @@ import org.example.webhook.entity.WebhookEventEntity;
 
 @UtilityClass
 public class WebhookEntityMapper {
-    public static WebhookEventEntity toEntity(WebhookEvent webhookEvent, WebhookEventEntity.Status status) {
+    public static WebhookEventEntity toEntity(WebhookEvent webhookEvent, WebhookEvent.Status status) {
         return WebhookEventEntity
                 .builder()
                 .id(webhookEvent.id())
                 .command(webhookEvent.command())
                 .status(status)
                 .build();
+    }
+
+    public static WebhookEvent toDomain(WebhookEventEntity entity) {
+        return new WebhookEvent(entity.getId(), entity.getEventType(), entity.getCommand(), entity.getStatus());
     }
 }

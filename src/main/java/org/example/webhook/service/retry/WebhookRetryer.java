@@ -5,21 +5,23 @@ import org.example.webhook.domain.event.RetryConfig;
 
 import java.time.Duration;
 
-public abstract class WebhookRetryer<T extends Command, Y> {
-    protected abstract Y attempt(T command, RetryConfig retryConfig);
+public abstract class WebhookRetryer<C extends Command, R> {
+    protected abstract R attempt(C command, RetryConfig retryConfig);
 
-    protected abstract boolean shouldRetry(RetryConfig retryConfig, Y attemptResult, int attemptCount);
+    protected abstract boolean shouldRetry(RetryConfig retryConfig, R attemptResult, int attemptCount);
 
-    public void attemptWithRetry(T command, RetryConfig retryConfig) {
+    public void attemptWithRetry(C command, RetryConfig retryConfig) {
         for (int attemptCount = 1; attemptCount <= retryConfig.maxAttemptCount(); ++attemptCount) {
-            Y attemptResult = attempt(command, retryConfig);
+            R attemptResult = attempt(command, retryConfig);
 
             if (!shouldRetry(retryConfig, attemptResult, attemptCount)) {
-                break;
+                return;
             }
 
             waitBeforeNextAttempt(retryConfig, attemptCount);
         }
+
+        throw new CommandAttemptFailedException();
     }
 
     private void waitBeforeNextAttempt(RetryConfig retryConfig, int attemptCount) {
@@ -27,7 +29,8 @@ public abstract class WebhookRetryer<T extends Command, Y> {
             Duration waitDuration = retryConfig.attemptBackoffConfig().getWaitTime(attemptCount);
             Thread.sleep(waitDuration);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Failed to wait: " + e);
+            throw new CommandAttemptFailedException();
         }
     }
 }

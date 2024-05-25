@@ -8,6 +8,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.example.webhook.domain.event.EventType;
 import org.example.webhook.domain.event.HttpCommand;
 import org.example.webhook.domain.event.WebhookEvent;
+import org.example.webhook.service.WebhookCreationException;
+import org.example.webhook.service.WebhookProcessingException;
 import org.example.webhook.service.WebhookProcessingService;
 import org.example.webhook.service.http.WebhookHttpClient;
 import org.example.webhook.service.kafka.serialization.JacksonObjectMapperKafkaValueDeserializer;
@@ -56,33 +58,40 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
     }
 
     @Override
-    public Optional<WebhookEvent> pollAndConsume() {
+    public WebhookConsumptionResult pollAndConsume() {
         System.out.println("Polling... " + Instant.now());
         ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
 
-        List<WebhookEvent> webhookEvents = new ArrayList<>();
         for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {
-            webhookEvents.add(handleConsumerRecord(consumerRecord));
+            try {
+                WebhookEvent webhookEvent = handleConsumerRecord(consumerRecord);
+                return new WebhookConsumptionResult(Optional.of(webhookEvent), Optional.empty());
+            } catch (WebhookProcessingException e) {
+                return new WebhookConsumptionResult(Optional.empty(), Optional.of(e.getWebhookEvent()));
+            } finally {
+                kafkaConsumer.commitSync();
+            }
         }
+
         kafkaConsumer.commitSync();
 
-        return webhookEvents.stream().findAny();
+        return new WebhookConsumptionResult(Optional.empty(), Optional.empty());
     }
 
-    private WebhookEvent handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) {
-        try {
-            System.out.println("Handling offset: " + consumerRecord.offset());
-            WebhookEvent webhookEvent = consumerRecord.value();
+    private WebhookEvent handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) throws WebhookProcessingException {
+        System.out.println("Handling offset: " + consumerRecord.offset());
+        WebhookEvent webhookEvent = consumerRecord.value();
 
+        try {
             switch (webhookEvent.command()) {
                 case HttpCommand httpCommand -> {
                     webhookHttpRetryer.attemptWithRetry(httpCommand, eventType.retryConfig());
                 }
             }
-
             return webhookEvent;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Webhook processing failed for: " + consumerRecord.offset());
+            throw new WebhookProcessingException(webhookEvent);
         }
     }
 }

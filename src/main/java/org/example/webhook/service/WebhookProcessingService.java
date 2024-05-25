@@ -2,7 +2,9 @@ package org.example.webhook.service;
 
 import org.example.webhook.domain.event.EventType;
 import org.example.webhook.domain.event.WebhookEvent;
+import org.example.webhook.service.kafka.KafkaConsumerWebhookProcessingService;
 
+import java.util.List;
 import java.util.Optional;
 
 public abstract class WebhookProcessingService {
@@ -14,5 +16,10 @@ public abstract class WebhookProcessingService {
 
     public abstract void start();
 
-    public abstract Optional<WebhookEvent> pollAndConsume() throws WebhookProcessingException;
+    public abstract WebhookConsumptionResult pollAndConsume();
+
+    public record WebhookConsumptionResult(
+            Optional<WebhookEvent> succeededWebhookEvent,
+            Optional<WebhookEvent> failedWebhookEvent) {
+    }
 }

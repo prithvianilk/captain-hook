@@ -1,6 +1,6 @@
 
-	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8‘•¢‰û1J$ba72d9dc-9602-4325-a2f8-cab52aabaf66
-m	java:S106<"+Replace this use of System.out by a logger.(ßù¶÷8¨•¢‰û1J$69bf1db6-9f7a-4c48-85ba-afef9114c2d4
-m	java:S106J"+Replace this use of System.out by a logger.(õŞğÎ8ª•¢‰û1J$03be0565-e218-42c1-81e6-c6d833d6ec36
-d
-java:S6205N"Remove this redundant block.(‹£¾øıÿÿÿÿ8ª•¢‰û1J$a69b1e94-28fe-41b3-b328-fb5f157a1480
+G	java:S106>"+Replace this use of System.out by a logger.(ßù¶÷8™Ê‹û1
+G	java:S106R"+Replace this use of System.out by a logger.(õŞğÎ8›Ê‹û1
+>
+java:S6205W"Remove this redundant block.(‹£¾øıÿÿÿÿ8›Ê‹û1
+L	java:S106]"+Replace this use of System.out by a logger.(£ˆÚƒÿÿÿÿÿ8›Ê‹û1
