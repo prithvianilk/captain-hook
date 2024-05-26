@@ -2,8 +2,15 @@ package com.prithvianilk.captainhook.entity;
 
 import com.prithvianilk.captainhook.domain.RetryConfig;
 import com.prithvianilk.captainhook.entity.converter.RetryConfigToStringConverter;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data

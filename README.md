@@ -56,9 +56,9 @@ curl --location '{{base_url}}/webhook/v1/prithvi_event_1'
 
 - Unique id representing the webhook event type
 - Retry configuration
-    - Request timeout
     - Max attempt count
     - HTTP status codes considered as a successful processing of the webhook
+    - Attempt backoff config - constant, exponential, etc
 
 ### Webhook event
 
