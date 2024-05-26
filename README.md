@@ -1,13 +1,54 @@
 # Captain hook
 
 - A simple webhook as a service
+- Built it over a late sunday night / early sunday morning, wanted to learn a bit of kafka
 
 # Features
 
-- Publish a webhook event w/ http request details
+- Publish a webhook event w/ http request details via a RESTful web JSON
 - Automatically handles retries on failures (timeouts / based on status code)
 - Manually retry webhooks that failed after the defined limit
 - Monitor all webhooks and their status
+
+## APIs
+
+### Create event type
+
+```
+curl --location '{{base_url}}/event/v1' \
+--header 'Content-Type: application/json' \
+--data '{
+    "id": "prithvi_event_1"
+}'
+```
+
+### Get all event types
+
+```
+curl --location '{{base_url}}/event/v1'
+```
+
+### Create webhook
+
+```
+curl --location '{{base_url}}/webhook/v1' \
+--header 'Content-Type: application/json' \
+--data '{
+    "id": "2f616df0-4768-4bf7-803d-4000aa4b52d8",
+    "event_type": "prithvi_event_1",
+    "command": {
+        "type": "HTTP",
+        "method": "GET",
+        "url": "https://dummyjson.com/products"
+    }
+}'
+```
+
+### Get all webhooks by event type
+
+```
+curl --location '{{base_url}}/webhook/v1/prithvi_event_1'
+```
 
 # Design
 
