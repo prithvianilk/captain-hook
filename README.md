@@ -76,6 +76,7 @@ curl --location '{{base_url}}/webhook/v1/prithvi_event_1'
 
 - Create new event type w/ retry configuration
 - Create topic with event name on kafka
+- Publish event on internal topic to notify webhook processors
 
 ### Create webhook
 
@@ -87,9 +88,14 @@ curl --location '{{base_url}}/webhook/v1/prithvi_event_1'
 - Read all event_types
 - Start a webhook processor for each event_type
 
+### Start new webhook processor for new event
+
+- Start kafka consumer subscribing to internal topic for new event_types
+- Consume new event type and create new event_type processor if not exists
+
 ### Process webhook
 
-- Consume events from kafka
+- Consume webhook events from kafka
 - Attempt processing of event with retry config
     - Sleep application thread on wait
 - Commit message on kafka

@@ -1,7 +1,7 @@
 package com.prithvianilk.captainhook.service.kafka;
 
 import com.prithvianilk.captainhook.domain.EventType;
-import com.prithvianilk.captainhook.dto.NewEventTypeAddedEvent;
+import com.prithvianilk.captainhook.dto.NewEventTypeDiscoveredEvent;
 import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaEventTypeValueDeserializer;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
@@ -63,12 +63,13 @@ public class NewEventTypeKafkaListener {
             while (true) {
                 log.info("Polling for new event_types...");
                 ConsumerRecords<String, EventType> records = eventTypeKafkaConsumer.poll(Duration.ofSeconds(1));
-                if (records.isEmpty()) {
-                    continue;
-                }
 
-                EventType eventType = records.iterator().next().value();
-                applicationEventPublisher.publishEvent(new NewEventTypeAddedEvent(this, eventType.id()));
+                records.forEach(record -> {
+                    EventType eventType = record.value();
+                    applicationEventPublisher.publishEvent(new NewEventTypeDiscoveredEvent(this, eventType));
+                });
+
+                eventTypeKafkaConsumer.commitSync();
             }
         });
     }

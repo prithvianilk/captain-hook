@@ -1,24 +1,24 @@
 package com.prithvianilk.captainhook.service;
 
+import com.prithvianilk.captainhook.domain.EventType;
 import com.prithvianilk.captainhook.domain.WebhookEvent;
+import com.prithvianilk.captainhook.dto.NewEventTypeDiscoveredEvent;
+import com.prithvianilk.captainhook.mapper.EventTypeEntityMapper;
 import com.prithvianilk.captainhook.mapper.WebhookEntityMapper;
+import com.prithvianilk.captainhook.repository.EventTypeRepository;
+import com.prithvianilk.captainhook.repository.WebhookRepository;
 import com.prithvianilk.captainhook.service.kafka.KafkaConsumerWebhookProcessingService;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import com.prithvianilk.captainhook.domain.EventType;
-import com.prithvianilk.captainhook.dto.NewEventTypeAddedEvent;
-import com.prithvianilk.captainhook.entity.EventTypeEntity;
-import com.prithvianilk.captainhook.mapper.EventTypeEntityMapper;
-import com.prithvianilk.captainhook.repository.EventTypeRepository;
-import com.prithvianilk.captainhook.repository.WebhookRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,7 +28,9 @@ public class WebhookConsumptionService {
 
     final WebhookRepository webhookRepository;
 
-    ExecutorService executorService;
+    final ExecutorService executorService;
+
+    Set<EventType> eventTypes;
 
     public WebhookConsumptionService(EventTypeRepository eventTypeRepository, WebhookRepository webhookRepository) {
         this.eventTypeRepository = eventTypeRepository;
@@ -36,26 +38,28 @@ public class WebhookConsumptionService {
         this.executorService = Executors.newVirtualThreadPerTaskExecutor();
     }
 
-    @EventListener(value = NewEventTypeAddedEvent.class)
-    public void onNewEventTypeAddedEvent(NewEventTypeAddedEvent event) {
-        log.info("Restarting consumers due to new event_type addition: {}", event.getEventType());
+    @EventListener(value = NewEventTypeDiscoveredEvent.class)
+    public void onNewEventTypeDiscoveredEvent(NewEventTypeDiscoveredEvent event) {
+        if (eventTypes.contains(event.getEventType())) {
+            return;
+        }
 
-        executorService.shutdownNow();
-        executorService = Executors.newVirtualThreadPerTaskExecutor();
-
-        startConsumption();
+        log.info("Found new event type: {}", event.getEventType().id());
+        eventTypes.add(event.getEventType());
+        executorService.submit(() -> startConsumptionForEventType(event.getEventType()));
     }
 
     @PostConstruct
     public void startConsumption() {
-        List<EventTypeEntity> eventTypeEntities = eventTypeRepository.findAll();
-
-        eventTypeEntities
+        eventTypes = eventTypeRepository
+                .findAll()
                 .stream()
                 .map(EventTypeEntityMapper::toDomain)
-                .forEach(eventType -> {
-                    executorService.submit(() -> startConsumptionForEventType(eventType));
-                });
+                .collect(Collectors.toSet());
+
+        eventTypes.forEach(eventType -> {
+            executorService.submit(() -> startConsumptionForEventType(eventType));
+        });
     }
 
     private void startConsumptionForEventType(EventType eventType) {
