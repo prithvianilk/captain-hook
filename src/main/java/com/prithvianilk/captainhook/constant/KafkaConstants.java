@@ -1,4 +1,4 @@
-package com.prithvianilk.captainhook.service.kafka;
+package com.prithvianilk.captainhook.constant;
 
 public class KafkaConstants {
     public static final String LOCAL_KAFKA_BOOTSTRAP_SERVER = "localhost:29092";

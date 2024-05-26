@@ -1,7 +1,8 @@
 package com.prithvianilk.captainhook.service.kafka;
 
+import com.prithvianilk.captainhook.constant.KafkaConstants;
 import com.prithvianilk.captainhook.service.WebhookEventTypeManager;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaEventTypeValueSerializer;
+import com.prithvianilk.captainhook.serializer.kafka.JacksonObjectMapperKafkaEventTypeValueSerializer;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.kafka.clients.CommonClientConfigs;

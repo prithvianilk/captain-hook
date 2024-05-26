@@ -1,5 +1,6 @@
 package com.prithvianilk.captainhook.service.kafka;
 
+import com.prithvianilk.captainhook.constant.KafkaConstants;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import com.prithvianilk.captainhook.domain.WebhookEvent;
 import com.prithvianilk.captainhook.service.WebhookCreationClient;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaWebhookEventValueSerializer;
+import com.prithvianilk.captainhook.serializer.kafka.JacksonObjectMapperKafkaWebhookEventValueSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;

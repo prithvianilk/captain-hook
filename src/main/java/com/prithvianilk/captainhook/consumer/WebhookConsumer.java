@@ -1,4 +1,4 @@
-package com.prithvianilk.captainhook.service;
+package com.prithvianilk.captainhook.consumer;
 
 import com.prithvianilk.captainhook.domain.EventType;
 import com.prithvianilk.captainhook.domain.WebhookEvent;
@@ -7,13 +7,14 @@ import com.prithvianilk.captainhook.mapper.EventTypeEntityMapper;
 import com.prithvianilk.captainhook.mapper.WebhookEntityMapper;
 import com.prithvianilk.captainhook.repository.EventTypeRepository;
 import com.prithvianilk.captainhook.repository.WebhookRepository;
+import com.prithvianilk.captainhook.service.WebhookProcessingService;
 import com.prithvianilk.captainhook.service.kafka.KafkaConsumerWebhookProcessingService;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -21,9 +22,9 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WebhookConsumptionService {
+public class WebhookConsumer {
     final EventTypeRepository eventTypeRepository;
 
     final WebhookRepository webhookRepository;
@@ -32,7 +33,7 @@ public class WebhookConsumptionService {
 
     Set<EventType> eventTypes;
 
-    public WebhookConsumptionService(EventTypeRepository eventTypeRepository, WebhookRepository webhookRepository) {
+    public WebhookConsumer(EventTypeRepository eventTypeRepository, WebhookRepository webhookRepository) {
         this.eventTypeRepository = eventTypeRepository;
         this.webhookRepository = webhookRepository;
         this.executorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -63,7 +64,7 @@ public class WebhookConsumptionService {
     }
 
     private void startConsumptionForEventType(EventType eventType) {
-        log.info("Starting consumption for: {}", eventType);
+        log.info("Starting consumption for: {}", eventType.id());
 
         WebhookProcessingService webhookProcessingService = new KafkaConsumerWebhookProcessingService(eventType);
 

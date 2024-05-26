@@ -1,5 +1,6 @@
 package com.prithvianilk.captainhook.service.kafka;
 
+import com.prithvianilk.captainhook.constant.KafkaConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -12,7 +13,7 @@ import com.prithvianilk.captainhook.domain.WebhookEvent;
 import com.prithvianilk.captainhook.service.WebhookProcessingException;
 import com.prithvianilk.captainhook.service.WebhookProcessingService;
 import com.prithvianilk.captainhook.service.http.WebhookHttpClient;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaWebhookEventValueDeserializer;
+import com.prithvianilk.captainhook.serializer.kafka.JacksonObjectMapperKafkaWebhookEventValueDeserializer;
 import com.prithvianilk.captainhook.service.retry.WebhookHttpRetryer;
 
 import java.time.Duration;
@@ -74,7 +75,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
     }
 
     private WebhookEvent handleConsumerRecord(ConsumerRecord<String, WebhookEvent> consumerRecord) throws WebhookProcessingException {
-        log.info("Handling offset: {}", consumerRecord.offset());
+        log.info("Handling offset: {} for event_type: {}", consumerRecord.offset(), eventType.id());
         WebhookEvent webhookEvent = consumerRecord.value();
 
         try {

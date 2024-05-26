@@ -1,8 +1,9 @@
-package com.prithvianilk.captainhook.service.kafka;
+package com.prithvianilk.captainhook.consumer.kafka;
 
 import com.prithvianilk.captainhook.domain.EventType;
 import com.prithvianilk.captainhook.dto.NewEventTypeDiscoveredEvent;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaEventTypeValueDeserializer;
+import com.prithvianilk.captainhook.constant.KafkaConstants;
+import com.prithvianilk.captainhook.serializer.kafka.JacksonObjectMapperKafkaEventTypeValueDeserializer;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -24,14 +25,14 @@ import java.util.concurrent.Executors;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class NewEventTypeKafkaListener {
+public class NewEventTypeKafkaConsumer {
     KafkaConsumer<String, EventType> eventTypeKafkaConsumer;
 
     ApplicationEventPublisher applicationEventPublisher;
 
     ExecutorService executorService;
 
-    public NewEventTypeKafkaListener(ApplicationEventPublisher applicationEventPublisher) {
+    public NewEventTypeKafkaConsumer(ApplicationEventPublisher applicationEventPublisher) {
         Properties properties = getProperties();
         eventTypeKafkaConsumer = new KafkaConsumer<>(properties);
         this.applicationEventPublisher = applicationEventPublisher;
