@@ -22,9 +22,6 @@ public class EventTypeService {
 
     WebhookEventTypeManager webhookEventTypeManager;
 
-    // TODO: Make this update all consumers
-    ApplicationEventPublisher applicationEventPublisher;
-
     public List<EventType> getAllEvents() {
         return eventTypeRepository
                 .findAll()
@@ -42,7 +39,6 @@ public class EventTypeService {
         eventTypeRepository.save(eventTypeEntity);
 
         webhookEventTypeManager.registerNewEventType(eventType);
-        applicationEventPublisher.publishEvent(new NewEventTypeAddedEvent(this, eventType.id()));
 
         return eventType;
     }

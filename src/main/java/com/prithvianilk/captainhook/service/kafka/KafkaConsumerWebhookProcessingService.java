@@ -12,7 +12,7 @@ import com.prithvianilk.captainhook.domain.WebhookEvent;
 import com.prithvianilk.captainhook.service.WebhookProcessingException;
 import com.prithvianilk.captainhook.service.WebhookProcessingService;
 import com.prithvianilk.captainhook.service.http.WebhookHttpClient;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaValueDeserializer;
+import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaWebhookEventValueDeserializer;
 import com.prithvianilk.captainhook.service.retry.WebhookHttpRetryer;
 
 import java.time.Duration;
@@ -29,9 +29,11 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
 
     public KafkaConsumerWebhookProcessingService(EventType eventType) {
         super(eventType);
+        webhookHttpRetryer = new WebhookHttpRetryer(new WebhookHttpClient());
+
         Properties config = getProperties();
         kafkaConsumer = new KafkaConsumer<>(config);
-        webhookHttpRetryer = new WebhookHttpRetryer(new WebhookHttpClient());
+        kafkaConsumer.subscribe(Collections.singleton(eventType.id()));
     }
 
     private Properties getProperties() {
@@ -45,19 +47,14 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
         config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
 
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonObjectMapperKafkaValueDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonObjectMapperKafkaWebhookEventValueDeserializer.class);
 
         return config;
     }
 
     @Override
-    public void start() {
-        kafkaConsumer.subscribe(Collections.singleton(eventType.id()));
-    }
-
-    @Override
-    public WebhookConsumptionResult pollAndConsume() {
-        log.info("Polling...");
+    public WebhookConsumptionResult consumeAndProcessWebhook() {
+        log.info("Polling for webhook...");
         ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
 
         for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {

@@ -11,7 +11,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import com.prithvianilk.captainhook.domain.WebhookEvent;
 import com.prithvianilk.captainhook.service.WebhookCreationClient;
-import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaValueSerializer;
+import com.prithvianilk.captainhook.service.kafka.serialization.JacksonObjectMapperKafkaWebhookEventValueSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -35,7 +35,7 @@ public class KafkaProducerWebhookCreationClient implements WebhookCreationClient
         config.put(CommonClientConfigs.CLIENT_ID_CONFIG, "webhook_producer:" + UUID.randomUUID());
         config.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.LOCAL_KAFKA_BOOTSTRAP_SERVER);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonObjectMapperKafkaValueSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonObjectMapperKafkaWebhookEventValueSerializer.class);
         return config;
     }
 

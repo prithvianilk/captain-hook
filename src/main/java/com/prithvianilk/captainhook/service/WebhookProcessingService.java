@@ -12,9 +12,7 @@ public abstract class WebhookProcessingService {
         this.eventType = eventType;
     }
 
-    public abstract void start();
-
-    public abstract WebhookConsumptionResult pollAndConsume();
+    public abstract WebhookConsumptionResult consumeAndProcessWebhook();
 
     public record WebhookConsumptionResult(
             Optional<WebhookEvent> succeededWebhookEvent,

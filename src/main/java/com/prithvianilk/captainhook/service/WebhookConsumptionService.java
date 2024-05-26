@@ -37,7 +37,7 @@ public class WebhookConsumptionService {
     }
 
     @EventListener(value = NewEventTypeAddedEvent.class)
-    public void listen(NewEventTypeAddedEvent event) {
+    public void onNewEventTypeAddedEvent(NewEventTypeAddedEvent event) {
         log.info("Restarting consumers due to new event_type addition: {}", event.getEventType());
 
         executorService.shutdownNow();
@@ -62,10 +62,9 @@ public class WebhookConsumptionService {
         log.info("Starting consumption for: {}", eventType);
 
         WebhookProcessingService webhookProcessingService = new KafkaConsumerWebhookProcessingService(eventType);
-        webhookProcessingService.start();
 
         while (true) {
-            WebhookProcessingService.WebhookConsumptionResult result = webhookProcessingService.pollAndConsume();
+            WebhookProcessingService.WebhookConsumptionResult result = webhookProcessingService.consumeAndProcessWebhook();
 
             result.succeededWebhookEvent()
                     .map(webhookEvent -> WebhookEntityMapper.toEntity(webhookEvent, WebhookEvent.Status.PROCESSED))

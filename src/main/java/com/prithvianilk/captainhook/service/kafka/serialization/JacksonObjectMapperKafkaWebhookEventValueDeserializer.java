@@ -8,7 +8,7 @@ import com.prithvianilk.captainhook.domain.WebhookEvent;
 import java.io.IOException;
 
 @Slf4j
-public class JacksonObjectMapperKafkaValueDeserializer implements Deserializer<WebhookEvent> {
+public class JacksonObjectMapperKafkaWebhookEventValueDeserializer implements Deserializer<WebhookEvent> {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override

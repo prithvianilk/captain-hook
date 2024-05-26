@@ -18,17 +18,21 @@ import java.util.concurrent.TimeUnit;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaWebhookEventTypeManager implements WebhookEventTypeManager {
-    private final AdminClient adminClient;
+    AdminClient adminClient;
 
-    public KafkaWebhookEventTypeManager() {
+    NewEventTypeKafkaProducer newEventTypeKafkaProducer;
+
+    public KafkaWebhookEventTypeManager(NewEventTypeKafkaProducer newEventTypeKafkaProducer) {
         Properties config = getProperties();
         adminClient = AdminClient.create(config);
+        this.newEventTypeKafkaProducer = newEventTypeKafkaProducer;
     }
 
     @Override
     public void registerNewEventType(EventType eventType) {
         NewTopic newTopic = new NewTopic(eventType.id(), 1, (short) 1);
         adminClient.createTopics(Collections.singletonList(newTopic));
+        newEventTypeKafkaProducer.publishNewEvent(eventType);
     }
 
     @Override
