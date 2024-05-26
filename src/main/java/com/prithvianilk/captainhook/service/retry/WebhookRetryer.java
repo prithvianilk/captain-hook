@@ -10,13 +10,13 @@ import java.time.Duration;
 public abstract class WebhookRetryer<C extends Command, R> {
     protected abstract R attempt(C command, RetryConfig retryConfig);
 
-    protected abstract boolean shouldRetry(RetryConfig retryConfig, R attemptResult, int attemptCount);
+    protected abstract boolean shouldRetry(RetryConfig retryConfig, R attemptResult);
 
     public void attemptWithRetry(C command, RetryConfig retryConfig) {
         for (int attemptCount = 1; attemptCount <= retryConfig.maxAttemptCount(); ++attemptCount) {
             try {
                 R attemptResult = attempt(command, retryConfig);
-                if (!shouldRetry(retryConfig, attemptResult, attemptCount)) {
+                if (!shouldRetry(retryConfig, attemptResult)) {
                     return;
                 }
             } catch (RetriableAttemptFailedException e) {
