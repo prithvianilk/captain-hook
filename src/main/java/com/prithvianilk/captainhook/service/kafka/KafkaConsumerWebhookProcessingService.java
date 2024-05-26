@@ -1,6 +1,8 @@
 package com.prithvianilk.captainhook.service.kafka;
 
 import com.prithvianilk.captainhook.constant.KafkaConstants;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -23,18 +25,23 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaConsumerWebhookProcessingService extends WebhookProcessingService {
-    private final KafkaConsumer<String, WebhookEvent> kafkaConsumer;
+    KafkaConsumer<String, WebhookEvent> kafkaConsumer;
 
-    private final WebhookHttpRetryer webhookHttpRetryer;
+    WebhookHttpRetryer webhookHttpRetryer;
 
-    public KafkaConsumerWebhookProcessingService(EventType eventType) {
+    Duration consumerPollDuration;
+
+    public KafkaConsumerWebhookProcessingService(EventType eventType, Duration consumerPollDuration) {
         super(eventType);
         webhookHttpRetryer = new WebhookHttpRetryer(new WebhookHttpClient());
 
         Properties config = getProperties();
         kafkaConsumer = new KafkaConsumer<>(config);
         kafkaConsumer.subscribe(Collections.singleton(eventType.id()));
+
+        this.consumerPollDuration = consumerPollDuration;
     }
 
     private Properties getProperties() {
@@ -56,7 +63,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
     @Override
     public WebhookConsumptionResult consumeAndProcessWebhook() {
         log.info("Polling for webhook for event_type: {}...", eventType.id());
-        ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
+        ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(consumerPollDuration);
 
         for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {
             try {

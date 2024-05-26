@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +33,16 @@ public class NewEventTypeKafkaConsumer {
 
     ExecutorService executorService;
 
-    public NewEventTypeKafkaConsumer(ApplicationEventPublisher applicationEventPublisher) {
+    Duration pollTimeout;
+
+    public NewEventTypeKafkaConsumer(
+            ApplicationEventPublisher applicationEventPublisher,
+            @Value("${new-event-type.max-acceptable-lag}") Duration maxAcceptableLag) {
         Properties properties = getProperties();
         eventTypeKafkaConsumer = new KafkaConsumer<>(properties);
         this.applicationEventPublisher = applicationEventPublisher;
         this.executorService = Executors.newVirtualThreadPerTaskExecutor();
+        this.pollTimeout = maxAcceptableLag;
     }
 
     private Properties getProperties() {
@@ -63,7 +69,7 @@ public class NewEventTypeKafkaConsumer {
         executorService.submit(() -> {
             while (true) {
                 log.info("Polling for new event_types...");
-                ConsumerRecords<String, EventType> records = eventTypeKafkaConsumer.poll(Duration.ofSeconds(1));
+                ConsumerRecords<String, EventType> records = eventTypeKafkaConsumer.poll(pollTimeout);
 
                 records.forEach(record -> {
                     EventType eventType = record.value();

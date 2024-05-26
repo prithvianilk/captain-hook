@@ -13,8 +13,10 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import com.prithvianilk.captainhook.domain.WebhookEvent;
 import com.prithvianilk.captainhook.service.WebhookCreationClient;
 import com.prithvianilk.captainhook.serializer.kafka.JacksonObjectMapperKafkaWebhookEventValueSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +28,13 @@ import java.util.concurrent.TimeUnit;
 public class KafkaProducerWebhookCreationClient implements WebhookCreationClient {
     KafkaProducer<String, WebhookEvent> kafkaProducer;
 
-    public KafkaProducerWebhookCreationClient() {
+    Duration maxPublishAckTimeout;
+
+    public KafkaProducerWebhookCreationClient(@Value("${webhook-creation.max-publish-ack-timeout}") Duration maxPublishAckTimeout) {
         Properties config = getProperties();
         kafkaProducer = new KafkaProducer<>(config);
+
+        this.maxPublishAckTimeout = maxPublishAckTimeout;
     }
 
     private Properties getProperties() {
@@ -44,7 +50,7 @@ public class KafkaProducerWebhookCreationClient implements WebhookCreationClient
     public void publish(String eventType, WebhookEvent webhookEvent) {
         try {
             ProducerRecord<String, WebhookEvent> producerRecord = new ProducerRecord<>(eventType, webhookEvent.id(), webhookEvent);
-            RecordMetadata recordMetadata = kafkaProducer.send(producerRecord).get(5, TimeUnit.SECONDS);
+            RecordMetadata recordMetadata = kafkaProducer.send(producerRecord).get(maxPublishAckTimeout.getSeconds(), TimeUnit.SECONDS);
             log.info("Published: {}", recordMetadata);
         } catch (Exception e) {
             log.error("Failed to publish", e);
