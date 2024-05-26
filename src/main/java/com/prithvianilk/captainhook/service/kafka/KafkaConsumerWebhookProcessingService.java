@@ -54,7 +54,7 @@ public class KafkaConsumerWebhookProcessingService extends WebhookProcessingServ
 
     @Override
     public WebhookConsumptionResult consumeAndProcessWebhook() {
-        log.info("Polling for webhook...");
+        log.info("Polling for webhook for event_type: {}...", eventType.id());
         ConsumerRecords<String, WebhookEvent> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
 
         for (ConsumerRecord<String, WebhookEvent> consumerRecord : consumerRecords) {
