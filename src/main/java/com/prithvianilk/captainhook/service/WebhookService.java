@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -31,9 +32,12 @@ public class WebhookService {
         return webhookEvent;
     }
 
-    public List<WebhookEvent> getAllWebhooksByEventType(String eventType) {
-        return webhookRepository
-                .findAllByEventType(eventType)
+    public List<WebhookEvent> getAllWebhooksByEventType(String eventType, Optional<WebhookEvent.Status> optionalStatus) {
+        List<WebhookEventEntity> entities = optionalStatus
+                .map(status -> webhookRepository.findAllByEventTypeAndStatus(eventType, status))
+                .orElseGet(() -> webhookRepository.findAllByEventType(eventType));
+
+        return entities
                 .stream()
                 .map(WebhookEntityMapper::toDomain)
                 .toList();
