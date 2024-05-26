@@ -22,6 +22,7 @@ public class EventTypeService {
 
     WebhookEventTypeManager webhookEventTypeManager;
 
+    // TODO: Make this update all consumers
     ApplicationEventPublisher applicationEventPublisher;
 
     public List<EventType> getAllEvents() {

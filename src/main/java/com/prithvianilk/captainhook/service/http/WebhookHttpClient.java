@@ -1,9 +1,9 @@
 package com.prithvianilk.captainhook.service.http;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prithvianilk.captainhook.domain.HttpCommand;
-import com.prithvianilk.captainhook.service.retry.CommandAttemptFailedException;
+import com.prithvianilk.captainhook.service.retry.RetriableAttemptFailedException;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -13,14 +13,12 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WebhookHttpClient {
-    private final HttpClient httpClient;
-
-    private final ObjectMapper objectMapper;
+    HttpClient httpClient;
 
     public WebhookHttpClient() {
         httpClient = HttpClient.newHttpClient();
-        objectMapper = new ObjectMapper();
     }
 
     public HttpResponse<String> send(HttpCommand httpCommand) {
@@ -29,7 +27,7 @@ public class WebhookHttpClient {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             log.error("Failed to sent http request", e);
-            throw new CommandAttemptFailedException();
+            throw new RetriableAttemptFailedException();
         }
     }
 
@@ -42,21 +40,11 @@ public class WebhookHttpClient {
 
         requestBuilder = switch (httpCommand.method()) {
             case GET -> requestBuilder.GET();
-            case POST -> requestBuilder.POST(getStringBodyPublisher(httpCommand));
-            case PUT -> requestBuilder.PUT(getStringBodyPublisher(httpCommand));
+            case POST -> requestBuilder.POST(HttpRequest.BodyPublishers.ofString(httpCommand.body()));
+            case PUT -> requestBuilder.PUT(HttpRequest.BodyPublishers.ofString(httpCommand.body()));
             case DELETE -> requestBuilder.DELETE();
         };
 
         return requestBuilder.build();
-    }
-
-    private HttpRequest.BodyPublisher getStringBodyPublisher(HttpCommand httpCommand) {
-        try {
-            String bodyAsString = objectMapper.writeValueAsString(httpCommand.body());
-            return HttpRequest.BodyPublishers.ofString(bodyAsString);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to write body as string", e);
-            throw new CommandAttemptFailedException();
-        }
     }
 }

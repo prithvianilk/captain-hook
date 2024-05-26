@@ -14,11 +14,13 @@ public abstract class WebhookRetryer<C extends Command, R> {
 
     public void attemptWithRetry(C command, RetryConfig retryConfig) {
         for (int attemptCount = 1; attemptCount <= retryConfig.maxAttemptCount(); ++attemptCount) {
-            // TODO: Retry for timeouts, fast fail for others
-            R attemptResult = attempt(command, retryConfig);
-
-            if (!shouldRetry(retryConfig, attemptResult, attemptCount)) {
-                return;
+            try {
+                R attemptResult = attempt(command, retryConfig);
+                if (!shouldRetry(retryConfig, attemptResult, attemptCount)) {
+                    return;
+                }
+            } catch (RetriableAttemptFailedException e) {
+                log.debug("Received retryable exception on attempt", e);
             }
 
             if (attemptCount < retryConfig.maxAttemptCount()) {
@@ -34,7 +36,7 @@ public abstract class WebhookRetryer<C extends Command, R> {
             Duration waitDuration = retryConfig.attemptBackoffConfig().getWaitTime(attemptCount);
             Thread.sleep(waitDuration);
         } catch (InterruptedException e) {
-            log.error("Failed to wait", e);
+            log.error("Failed on waiting before next attempt", e);
             throw new CommandAttemptFailedException();
         }
     }
